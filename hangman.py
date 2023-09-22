@@ -17,7 +17,7 @@ def get_valid_word(words):
 
 def hangman():
     # getting a valid word without '-' or ' '
-    word = get_valid_word(words)
+    word = get_valid_word(words).upper()
     # split the word into a set
     word_letters = set(word)  # get a set of letters in the word
     # gets all the alphabets in ABCD
@@ -27,16 +27,20 @@ def hangman():
     # tracker
     used_letters = set()
 
-    while len(word_letters) > 0:
+    lives = 6
+
+    while len(word_letters) > 0 and lives > 0:
         # letters used
         # so that the player can keep track
         # joins a list into a strings with spaces between
-        print("You have used these letters:", ', '.join(used_letters))
+        print('You have', lives, "left and you have used these letters:",
+              ', '.join(used_letters))
 
         # what the current word is
         # all the letter guessed is shown
         # letters that haven't been guessed is replaced by dashes
-        word_list = [letter if letter in used_letters else '-' for letter in word]
+        word_list = [
+            letter if letter in used_letters else '-' for letter in word]
         print('Current word: ', ' '.join(word_list))
 
         # getting a user input
@@ -49,7 +53,13 @@ def hangman():
             # if used letter in word letters
             if user_letter in word_letters:
                 # remove that word letter from used letter
+                # this will track our while loop
                 word_letters.remove(user_letter)
+
+            else:
+                # take one life
+                lives -= 1
+                print("Letter is not in word.")
 
         # if we have already used/guessed this letter
         elif user_letter in used_letters:
@@ -57,6 +67,11 @@ def hangman():
 
         else:
             print("Invalid character. Please try again.")
+    if lives == 0:
+        print("You died, sorry. The word was", word)
+    else:
+        print("You guessed the word", word, "!!")
+
 
 hangman()
 # user_input = input("Type something: ")
